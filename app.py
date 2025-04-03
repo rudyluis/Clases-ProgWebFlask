@@ -7,23 +7,22 @@ import psycopg2
 
 app = Flask(__name__)
 
-conn= psycopg2.connect(
-    database="jardineria_clases", 
-    user="postgres", 
-    password="123456", 
-    host="localhost", 
-    port="5432"
-)
 
-@app.route("/procedimientos_bd")
-def procedimientos_bd():
-    cursor = conn.cursor()
-    cursor.execute("SELECT * from oficina")
-    oficinas = cursor.fetchall()
-    cursor.close()
-    conn.close()
-    return oficinas
+# Configuración de la base de datos PostgreSQL
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:123456@localhost:5432/jardineria_clases'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db = SQLAlchemy(app)
+
+
     
+@app.route("/empleados", methods=['GET'])
+def empleados():
+     with db.engine.connect() as connection:
+        result = connection.execute(text("SELECT * FROM empleado;"))
+        app.logger.info(result)
+        empleados = [dict(row._mapping) for row in result]  # ✅ Convertir a diccionario
+        return render_template('empleados.html', empleados=empleados)  # Enviar a la plantilla HTML
+
 @app.route('/')
 def home():
     return render_template('home.html')

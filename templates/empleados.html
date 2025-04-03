@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EMPLEADOS</title>
+</head>
+<body>
+    <h1>Listado de Empleados</h1>
+    
+    <table >
+        <thead>
+            <tr>
+                {% for key in empleados[0].keys() %}
+                    <th>{{ key }}</th>  <!-- Encabezados dinámicos -->
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for empleado in empleados %}
+                <tr>
+                    {% for value in empleado.values() %}
+                        <td>{{ value }}</td>  <!-- Datos de cada fila -->
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
